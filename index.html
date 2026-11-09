@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Vehicle Plate Toolkit By หน่องไอซ์นาจาาาา</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Sarabun', 'sans-serif'],
+          },
+          colors: {
+            cyber: {
+              dark: '#020617',
+              slate: '#0f172a',
+              blue: '#38bdf8',
+              indigo: '#818cf8',
+              glow: 'rgba(56, 189, 248, 0.5)',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.3s ease-out',
+            'slide-up': 'slideUp 0.4s ease-out',
+            'pulse-glow': 'pulseGlow 2s infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { boxShadow: '0 0 10px rgba(56, 189, 248, 0.2)' },
+              '50%': { boxShadow: '0 0 20px rgba(56, 189, 248, 0.6)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Glass Effect Utility */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.65); 
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .glass-input {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    .glass-input:focus {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: #38bdf8;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+
+    /* Gradient Text */
+    .text-gradient {
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body {
+      background-color: #020617;
+      /* Background Image Updated: Night Road */
+      background-image: 
+        linear-gradient(to bottom, rgba(2, 6, 23, 0.9), rgba(15, 23, 42, 0.85)), 
+        url("http://googleusercontent.com/image_generation_content/0");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+  </style>
+</head>
+<body class="text-slate-200 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
+
+  <nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-auto py-3">
+        <div class="flex items-start gap-3 cursor-pointer group flex-1" onclick="switchView('home')">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 flex-shrink-0 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform duration-300 mt-1">
+            <span class="font-bold text-white text-xl">VP</span>
+          </div>
+          <div class="flex flex-col justify-center min-h-[48px]">
+            <h1 class="font-bold text-base md:text-lg leading-tight text-white mb-1">Vehicle Plate Toolkit By หน่องไอซ์นาจาาาา</h1>
+            <p class="text-[10px] md:text-xs text-sky-400 font-medium leading-tight opacity-90 max-w-lg">
+              29/11/2025-1.00.4 - เลขทะเบียน/จังหวัด : กรอกเลขไหน ให้โชว์ผลลัพธ์เป็นอีกเลขหนึ่ง (Request By เป๋าเป้)
+            </p>
+          </div>
+        </div>
+
+        <div class="hidden md:flex items-center space-x-2 flex-shrink-0 ml-4">
+          <button onclick="switchView('home')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-white/5">
+            <i class="fa-solid fa-house"></i>
+            <span>หน้าหลัก</span>
+          </button>
+          <button onclick="switchView('foreign')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-white/5">
+            <i class="fa-solid fa-language"></i>
+            <span>ป้ายต่างประเทศ</span>
+          </button>
+          <button onclick="switchView('full')" class="nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-white/5">
+            <i class="fa-solid fa-car"></i>
+            <span>ค้นหาทะเบียน</span>
+          </button>
+        </div>
+
+        <div class="md:hidden flex space-x-3 ml-2">
+            </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 pt-28 pb-20 px-4 md:px-0 flex justify-center w-full max-w-5xl mx-auto">
+    
+    <div id="view-home" class="view-section w-full animate-fade-in block">
+      <div class="text-center py-6">
+        <div class="inline-block p-1 rounded-full bg-slate-800/50 border border-slate-700 mb-6 backdrop-blur-sm">
+          <span class="px-3 py-1 rounded-full bg-sky-500/10 text-sky-400 text-xs font-bold uppercase tracking-wider">Ver 1.00.4</span>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white drop-shadow-lg">
+          เครื่องมือ <span class="text-gradient">งานทะเบียน</span> ครบวงจร
+        </h2>
+        <p class="text-slate-400 max-w-lg mx-auto text-lg mb-12 font-light">
+          แปลงรหัสป้ายต่างประเทศ ค้นหาเลขจังหวัด และตรวจสอบป้ายเหลือง ได้รวดเร็วและแม่นยำที่สุด
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div onclick="switchView('foreign')" class="group relative p-8 rounded-3xl glass-panel border border-white/5 hover:border-amber-500/50 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl -mr-10 -mt-10 transition-all group-hover:bg-amber-500/20"></div>
+            <div class="relative z-10 flex flex-col items-center">
+              <div class="w-16 h-16 rounded-2xl bg-slate-800/80 flex items-center justify-center mb-6 text-3xl shadow-inner border border-white/5 group-hover:scale-110 transition-transform text-amber-400">
+                <i class="fa-solid fa-language"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">ป้ายต่างประเทศ</h3>
+              <p class="text-slate-400 text-sm">แปลงรหัสภาษาอังกฤษ A-Z, V1-V7 เป็นหมวดไทย</p>
+            </div>
+          </div>
+
+          <div onclick="switchView('full')" class="group relative p-8 rounded-3xl glass-panel border border-white/5 hover:border-indigo-500/50 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-indigo-500/10 overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl -mr-10 -mt-10 transition-all group-hover:bg-indigo-500/20"></div>
+            <div class="relative z-10 flex flex-col items-center">
+              <div class="w-16 h-16 rounded-2xl bg-slate-800/80 flex items-center justify-center mb-6 text-3xl shadow-inner border border-white/5 group-hover:scale-110 transition-transform text-sky-400">
+                <i class="fa-solid fa-car"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">เลขทะเบียน & จังหวัด</h3>
+              <p class="text-slate-400 text-sm">ค้นหาความสัมพันธ์เลขระบบ เลขป้ายเหลือง และชื่อจังหวัด</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-foreign" class="view-section w-full hidden animate-slide-up">
+      <div class="flex items-center gap-4 mb-8">
+        <button onclick="switchView('home')" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-slate-700 transition text-slate-400 hover:text-white">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <div>
+          <h2 class="text-2xl font-bold text-white">แปลงป้ายต่างประเทศ</h2>
+          <p class="text-slate-500 text-xs uppercase tracking-wide">English Code to Thai Script</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
+        <div class="glass-panel p-6 rounded-2xl relative">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400 font-bold text-sm">1</div>
+            <span class="font-semibold text-slate-200">แปลงทั้งหมด (รวมเลขหน้า)</span>
+          </div>
+          <div class="space-y-4">
+            <div class="relative">
+              <textarea id="fullInput" class="w-full h-24 glass-input rounded-xl p-4 pr-12 text-xl font-mono text-white placeholder-slate-600 outline-none resize-none" placeholder="เช่น AB, 34, C2Y"></textarea>
+              <button onclick="clearInput('fullInput')" class="absolute top-2 right-2 w-8 h-8 rounded-lg bg-slate-700/50 hover:bg-red-500/80 text-slate-400 hover:text-white flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            
+            <div onclick="copyText(document.getElementById('fullResult').innerText, 'Full Code')" class="relative group cursor-pointer overflow-hidden rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 border border-sky-500/30 p-4 hover:border-sky-500 transition-colors">
+              <div class="absolute inset-0 bg-sky-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <p class="text-xs text-slate-500 mb-1 uppercase tracking-wider">ผลลัพธ์ (แตะเพื่อคัดลอก)</p>
+              <div class="flex justify-between items-center">
+                <div id="fullResult" class="text-3xl font-bold text-sky-400 font-sans tracking-wide min-h-[40px] flex items-center">-</div>
+                <i class="fa-regular fa-copy text-slate-500 group-hover:text-sky-400 transition-colors"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-panel p-6 rounded-2xl relative">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm">2</div>
+            <span class="font-semibold text-slate-200">ป้ายเลขหน้า (ข้ามเลขตัวแรก)</span>
+            <span class="bg-amber-500/20 text-amber-400 text-[10px] px-2 py-0.5 rounded ml-auto">Popular</span>
+          </div>
+          <div class="space-y-4">
+            <div class="relative">
+              <textarea id="plateInput" class="w-full h-24 glass-input rounded-xl p-4 pr-12 text-xl font-mono text-white placeholder-slate-600 outline-none resize-none" placeholder="เช่น 2BZ, 8AY"></textarea>
+              <button onclick="clearInput('plateInput')" class="absolute top-2 right-2 w-8 h-8 rounded-lg bg-slate-700/50 hover:bg-red-500/80 text-slate-400 hover:text-white flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            
+            <div onclick="copyText(document.getElementById('plateResult').innerText, 'Plate Code')" class="relative group cursor-pointer overflow-hidden rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 border border-amber-500/30 p-4 hover:border-amber-500 transition-colors">
+              <div class="absolute inset-0 bg-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <p class="text-xs text-slate-500 mb-1 uppercase tracking-wider">ผลลัพธ์ (แตะเพื่อคัดลอก)</p>
+              <div class="flex justify-between items-center">
+                <div id="plateResult" class="text-3xl font-bold text-amber-400 font-sans tracking-wide min-h-[40px] flex items-center">-</div>
+                <i class="fa-regular fa-copy text-slate-500 group-hover:text-amber-400 transition-colors"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-full" class="view-section w-full hidden animate-slide-up">
+      <div class="flex items-center gap-4 mb-6">
+        <button onclick="switchView('home')" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-slate-700 transition text-slate-400 hover:text-white">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <div>
+          <h2 class="text-2xl font-bold text-white">ค้นหาทะเบียน</h2>
+          <p class="text-slate-500 text-xs uppercase tracking-wide">Database Search</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col lg:flex-row gap-6">
+        <aside class="w-full lg:w-72 flex flex-col gap-4 shrink-0">
+          <div class="glass-panel p-2 rounded-xl flex lg:flex-col gap-2 overflow-x-auto">
+            <button onclick="setFullMode('number')" id="btnModeNum" class="mode-btn flex-1 flex items-center gap-3 p-3 rounded-lg border border-transparent transition-all text-left">
+              <div class="w-10 h-10 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center text-lg"><i class="fa-solid fa-arrow-up-9-1"></i></div>
+              <div>
+                <div class="font-bold text-sm">เลข > จังหวัด</div>
+                <div class="text-[10px] text-slate-400">กรอกเลข 2 หลัก</div>
+              </div>
+            </button>
+            <button onclick="setFullMode('province')" id="btnModeProv" class="mode-btn flex-1 flex items-center gap-3 p-3 rounded-lg border border-transparent transition-all text-left">
+              <div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg"><i class="fa-solid fa-map-location-dot"></i></div>
+              <div>
+                <div class="font-bold text-sm">จังหวัด > เลข</div>
+                <div class="text-[10px] text-slate-400">พิมพ์ชื่อจังหวัด</div>
+              </div>
+            </button>
+          </div>
+
+          <div id="numTypeToggle" class="glass-panel p-4 rounded-xl border border-slate-700/50">
+            <label class="text-xs text-slate-400 mb-2 block font-medium">ประเภทตัวเลขที่กรอก</label>
+            <div class="relative">
+              <select id="numberTypeSelect" class="w-full appearance-none bg-slate-900 border border-slate-700 text-slate-200 py-3 px-4 pr-8 rounded-lg outline-none focus:border-sky-500 transition-colors text-sm">
+                <option value="plate">เลขบนป้าย (เหลือง)</option>
+                <option value="system">เลขในระบบ</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="flex-1 min-w-0">
+          <div class="relative z-30 mb-6">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <i class="fa-solid fa-magnifying-glass text-slate-500"></i>
+            </div>
+            <input type="text" id="searchInput" autocomplete="off" 
+              class="w-full pl-11 pr-12 py-4 bg-slate-800/80 border border-slate-700 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:border-sky-500 transition-all shadow-lg text-lg" 
+              placeholder="กรอกข้อมูล...">
+            
+            <button onclick="clearInput('searchInput')" 
+              class="absolute inset-y-0 right-0 pr-4 pl-2 flex items-center text-slate-500 hover:text-white cursor-pointer transition-colors z-10">
+              <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <ul id="autocompleteList" class="absolute w-full mt-2 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto hidden z-50 divide-y divide-slate-700/50"></ul>
+          </div>
+
+          <div id="resultCards" class="grid grid-cols-2 gap-4 mb-6 hidden">
+            <div onclick="copyCard('yellow')" class="cursor-pointer bg-slate-800/50 border border-amber-500/30 hover:bg-slate-800 hover:border-amber-500 p-4 rounded-xl transition-all group">
+              <div class="text-xs text-amber-500 uppercase font-bold tracking-wider mb-1">เลขป้ายเหลือง</div>
+              <div id="resPlate" class="text-3xl font-bold text-white group-hover:scale-105 transition-transform origin-left">-</div>
+            </div>
+            <div onclick="copyCard('blue')" class="cursor-pointer bg-slate-800/50 border border-sky-500/30 hover:bg-slate-800 hover:border-sky-500 p-4 rounded-xl transition-all group">
+              <div class="text-xs text-sky-500 uppercase font-bold tracking-wider mb-1">เลขในระบบ</div>
+              <div id="resSystem" class="text-3xl font-bold text-white group-hover:scale-105 transition-transform origin-left">-</div>
+            </div>
+          </div>
+
+          <div class="relative glass-panel rounded-3xl p-8 md:p-12 text-center border-t border-white/10 overflow-hidden min-h-[300px] flex flex-col items-center justify-center">
+             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-sky-500/10 rounded-full blur-[80px]"></div>
+             
+             <div class="relative z-10">
+               <div class="text-xs md:text-sm font-medium text-slate-500 uppercase tracking-[0.2em] mb-4">ผลการค้นหา (Province)</div>
+               
+               <h1 id="mainDisplayValue" onclick="copyText(this.innerText, 'ชื่อจังหวัด')" 
+                 class="text-5xl md:text-7xl font-bold text-white mb-4 cursor-pointer hover:text-sky-400 transition-colors drop-shadow-2xl select-none leading-tight py-2">
+                 -
+               </h1>
+               
+               <div id="mainDisplaySub" onclick="copyText(this.innerText.match(/[0-9]+/)?.[0], 'ตัวเลข')"
+                 class="inline-block px-4 py-2 rounded-full bg-slate-900/50 border border-slate-700 text-slate-300 text-lg md:text-xl font-mono cursor-pointer hover:bg-sky-500/20 hover:border-sky-500/50 hover:text-white transition-all">
+                 รอการค้นหา...
+               </div>
+             </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div class="md:hidden fixed bottom-0 w-full bg-slate-900/90 backdrop-blur-lg border-t border-slate-800 z-50 flex justify-around p-2 pb-safe">
+    <button onclick="switchView('home')" class="nav-mobile-btn flex flex-col items-center p-2 text-slate-500 active">
+      <i class="fa-solid fa-house text-lg mb-1"></i>
+      <span class="text-[10px]">หน้าหลัก</span>
+    </button>
+    <button onclick="switchView('foreign')" class="nav-mobile-btn flex flex-col items-center p-2 text-slate-500">
+      <i class="fa-solid fa-language text-lg mb-1"></i>
+      <span class="text-[10px]">ป้ายนอก</span>
+    </button>
+    <button onclick="switchView('full')" class="nav-mobile-btn flex flex-col items-center p-2 text-slate-500">
+      <i class="fa-solid fa-magnifying-glass text-lg mb-1"></i>
+      <span class="text-[10px]">ค้นหา</span>
+    </button>
+  </div>
+
+  <div id="toast" class="fixed bottom-24 md:bottom-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl border border-emerald-500/50 flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-10 z-[100] pointer-events-none">
+    <div class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-xs">
+      <i class="fa-solid fa-check text-white"></i>
+    </div>
+    <span id="toastMsg" class="font-medium text-sm">คัดลอกเรียบร้อย</span>
+  </div>
+
+  <script>
+    // --- Data Source ---
+    const provinceData = [
+      { province: "กรุงเทพมหานคร", system: 10, plate: 1 }, { province: "สมุทรปราการ", system: 11, plate: 18 },
+      { province: "นนทบุรี", system: 12, plate: 17 }, { province: "ปทุมธานี", system: 13, plate: 16 },
+      { province: "พระนครศรีอยุธยา", system: 14, plate: 15 }, { province: "อ่างทอง", system: 15, plate: 13 },
+      { province: "ลพบุรี", system: 16, plate: 12 }, { province: "สิงห์บุรี", system: 17, plate: 11 },
+      { province: "ชัยนาท", system: 18, plate: 10 }, { province: "สระบุรี", system: 19, plate: 14 },
+      { province: "ชลบุรี", system: 20, plate: 23 }, { province: "ระยอง", system: 21, plate: 24 },
+      { province: "จันทบุรี", system: 22, plate: 25 }, { province: "ตราด", system: 23, plate: 26 },
+      { province: "ฉะเชิงเทรา", system: 24, plate: 22 }, { province: "ปราจีนบุรี", system: 25, plate: 21 },
+      { province: "นครนายก", system: 26, plate: 20 }, { province: "สระแก้ว", system: 27, plate: 27 },
+      { province: "นครราชสีมา", system: 30, plate: 35 }, { province: "บุรีรัมย์", system: 31, plate: 34 },
+      { province: "สุรินทร์", system: 32, plate: 36 }, { province: "ศรีสะเกษ", system: 33, plate: 33 },
+      { province: "อุบลราชธานี", system: 34, plate: 32 }, { province: "ยโสธร", system: 35, plate: 31 },
+      { province: "ชัยภูมิ", system: 36, plate: 30 }, { province: "อำนาจเจริญ", system: 37, plate: 37 },
+      { province: "บึงกาฬ", system: 38, plate: 402 }, { province: "หนองบัวลำภู", system: 39, plate: 401 },
+      { province: "ขอนแก่น", system: 40, plate: 45 }, { province: "อุดรธานี", system: 41, plate: 42 },
+      { province: "เลย", system: 42, plate: 41 }, { province: "หนองคาย", system: 43, plate: 40 },
+      { province: "มหาสารคาม", system: 44, plate: 47 }, { province: "ร้อยเอ็ด", system: 45, plate: 48 },
+      { province: "กาฬสินธุ์", system: 46, plate: 46 }, { province: "สกลนคร", system: 47, plate: 44 },
+      { province: "นครพนม", system: 48, plate: 43 }, { province: "มุกดาหาร", system: 49, plate: 49 },
+      { province: "เชียงใหม่", system: 50, plate: 52 }, { province: "ลำพูน", system: 51, plate: 55 },
+      { province: "ลำปาง", system: 52, plate: 56 }, { province: "อุตรดิตถ์", system: 53, plate: 60 },
+      { province: "แพร่", system: 54, plate: 57 }, { province: "น่าน", system: 55, plate: 54 },
+      { province: "พะเยา", system: 56, plate: 53 }, { province: "เชียงราย", system: 57, plate: 50 },
+      { province: "แม่ฮ่องสอน", system: 58, plate: 51 }, { province: "นครสวรรค์", system: 60, plate: 67 },
+      { province: "อุทัยธานี", system: 61, plate: 68 }, { province: "กำแพงเพชร", system: 62, plate: 64 },
+      { province: "ตาก", system: 63, plate: 62 }, { province: "สุโขทัย", system: 64, plate: 61 },
+      { province: "พิษณุโลก", system: 65, plate: 63 }, { province: "พิจิตร", system: 66, plate: 65 },
+      { province: "เพชรบูรณ์", system: 67, plate: 66 }, { province: "ราชบุรี", system: 70, plate: 73 },
+      { province: "กาญจนบุรี", system: 71, plate: 71 }, { province: "สุพรรณบุรี", system: 72, plate: 70 },
+      { province: "นครปฐม", system: 73, plate: 72 }, { province: "สมุทรสาคร", system: 74, plate: 74 },
+      { province: "สมุทรสงคราม", system: 75, plate: 75 }, { province: "เพชรบุรี", system: 76, plate: 76 },
+      { province: "ประจวบคีรีขันธ์", system: 77, plate: 77 }, { province: "นครศรีธรรมราช", system: 80, plate: 84 },
+      { province: "กระบี่", system: 81, plate: 85 }, { province: "พังงา", system: 82, plate: 83 },
+      { province: "ภูเก็ต", system: 83, plate: 86 }, { province: "สุราษฎร์ธานี", system: 84, plate: 82 },
+      { province: "ระนอง", system: 85, plate: 81 }, { province: "ชุมพร", system: 86, plate: 80 },
+      { province: "สงขลา", system: 90, plate: 92 }, { province: "สตูล", system: 91, plate: 93 },
+      { province: "ตรัง", system: 92, plate: 91 }, { province: "พัทลุง", system: 93, plate: 90 },
+      { province: "ปัตตานี", system: 94, plate: 94 }, { province: "ยะลา", system: 95, plate: 95 },
+      { province: "นราธิวาส", system: 96, plate: 96 }
+    ];
+
+    const CODE_TO_TH = {
+      A: "ก", B: "ข", C: "ค", D: "ง", E: "จ", F: "ฉ", G: "ช", H: "ฌ", I: "ฎ", J: "ฐ",
+      K: "ณ", L: "ด", M: "ต", N: "ถ", O: "ท", P: "ธ", Q: "น", R: "บ", S: "ป", T: "ผ",
+      U: "พ", V: "ฟ", W: "ภ", X: "ม", Y: "ย", Z: "ร", 1: "ล", 2: "ว", 3: "ศ", 4: "ษ",
+      5: "ส", 6: "ห", 7: "ฬ", 8: "อ", 9: "ฮ", 11: "ญ", 12: "ฒ", 13: "ฆ", 14: "ซ",
+      V1: "ญญู", V2: "ฒฒ", V3: "ฆฆ", V4: "ญฒ", V5: "ฒญ", V6: "ฆญู", V7: "ฆฒ",
+      A10: "1กฆ", A11: "1กญ", A12: "1กฒ", A13: "2กฆ", A14: "2กญ", A15: "2กฒ", A16: "3กฆ", A17: "3กญ", A18: "3กฒ", A19: "4กฆ", A20: "4กญ", A21: "4กฒ", A22: "5กฆ", A23: "5กญ", A24: "5กฒ", A25: "6กฆ", A26: "6กญ", A27: "6กฒ", A28: "7กฆ", A29: "7กญ", A30: "7กฒ", A31: "8กฆ", A32: "8กญ", A33: "8กฒ", A34: "9กฆ", A35: "9กญ", A36: "9กฒ",
+      A37: "1ขฆ", A38: "1ขญ", A39: "1ขฒ", A40: "2ขฆ", A41: "2ขญ", A42: "2ขฒ", A43: "3ขฆ", A44: "3ขญ", A45: "3ขฒ", A46: "4ขฆ", A47: "4ขญ", A48: "4ขฒ", A49: "5ขฆ", A50: "5ขญ", A51: "5ขฒ", A52: "6ขฆ", A53: "6ขญ", A54: "6ขฒ", A55: "7ขฆ", A56: "7ขญ", A57: "7ขฒ", A58: "8ขฆ", A59: "8ขญ", A60: "8ขฒ", A61: "9ขฆ", A62: "9ขญ", A63: "9ขฒ",
+      A64: "1ฆก", A65: "1ฆข", A66: "1ฆค", A67: "1ฆง", A68: "1ฆจ", A69: "1ฆฉ", A70: "1ฆช", A71: "1ฆฌ", A72: "1ฆฏ", A73: "1ฆฐ", A74: "1ฆณ", A75: "1ฆด", A76: "1ฆต", A77: "1ฆถ", A78: "1ฆท", A79: "1ฆธ", A80: "1ฆน", A81: "1ฆบ", A82: "1ฆผ", A83: "1ฆพ", A84: "1ฆภ", A85: "1ฆม", A86: "1ฆย", A87: "1ฆร", A88: "1ฆล", A89: "1ฆว", A90: "1ฆศ", A91: "1ฆษ", A92: "1ฆส", A93: "1ฆห", A94: "1ฆฬ", A95: "1ฆอ", A96: "1ฆฮ",
+      A97: "2ฆก", A98: "2ฆข", A99: "2ฆค", B10: "2ฆง", B11: "2ฆจ", B12: "2ฆฉ", B13: "2ฆช", B14: "2ฆฌ", B15: "2ฆฏ", B16: "2ฆฐ", B17: "2ฆณ", B18: "2ฆด", B19: "2ฆต", B20: "2ฆถ", B21: "2ฆท", B22: "2ฆธ", B23: "2ฆน", B24: "2ฆบ", B25: "2ฆผ", B26: "2ฆพ", B27: "2ฆภ", B28: "2ฆม", B29: "2ฆย", B30: "2ฆร", B31: "2ฆล", B32: "2ฆว", B33: "2ฆศ", B34: "2ฆษ", B35: "2ฆส", B36: "2ฆห", B37: "2ฆฬ", B38: "2ฆอ", B39: "2ฆฮ",
+      B40: "3ฆก", B41: "3ฆข", B42: "3ฆค", B43: "3ฆง", B44: "3ฆจ", B45: "3ฆฉ", B46: "3ฆช", B47: "3ฆฌ", B48: "3ฆญ", B49: "3ฆฐ", B50: "3ฆณ", B51: "3ฆด", B52: "3ฆต", B53: "3ฆถ", B54: "3ฆท", B55: "3ฆธ", B56: "3ฆน", B57: "3ฆบ", B58: "3ฆผ", B59: "3ฆพ", B60: "3ฆภ", B61: "3ฆม", B62: "3ฆย", B63: "3ฆร", B64: "3ฆล", B65: "3ฆว", B66: "3ฆศ", B67: "3ฆษ", B68: "3ฆส", B69: "3ฆห", B70: "3ฆฬ", B71: "3ฆอ", B72: "3ฆฮ",
+      B73: "4ฆก", B74: "4ฆข", B75: "4ฆค", B76: "4ฆง", B77: "4ฆจ", B78: "4ฆฉ", B79: "4ฆช", B80: "4ฆฌ", B81: "4ฆญ", B82: "4ฆฐ", B83: "4ฆณ", B84: "4ฆด", B85: "4ฆต", B86: "4ฆถ", B87: "4ฆท", B88: "4ฆธ", B89: "4ฆน", B90: "4ฆบ", B91: "4ฆผ", B92: "4ฆพ", B93: "4ฆภ", B94: "4ฆม", B95: "4ฆย", B96: "4ฆร", B97: "4ฆล", B98: "4ฆว", B99: "4ฆศ", C10: "4ฆษ", C11: "4ฆส", C12: "4ฆห", C13: "4ฆฬ", C14: "4ฆอ", C15: "4ฆฮ",
+      C16: "5ฆก", C17: "5ฆข", C18: "5ฆค", C19: "5ฆง", C20: "5ฆจ", C21: "5ฆฉ", C22: "5ฆช", C23: "5ฆฌ", C24: "5ฆญ", C25: "5ฆฐ", C26: "5ฆณ", C27: "5ฆด", C28: "5ฆต", C29: "5ฆถ", C30: "5ฆท", C31: "5ฆธ", C32: "5ฆน", C33: "5ฆบ", C34: "5ฆผ", C35: "5ฆพ", C36: "5ฆภ", C37: "5ฆม", C38: "5ฆย", C39: "5ฆร", C40: "5ฆล", C41: "5ฆว", C42: "5ฆศ", C43: "5ฆษ", C44: "5ฆส", C45: "5ฆห", C46: "5ฆฬ", C47: "5ฆอ", C48: "5ฆฮ",
+      C49: "6ฆก", C50: "6ฆข", C51: "6ฆค", C52: "6ฆง", C53: "6ฆจ", C54: "6ฆฉ", C55: "6ฆช", C56: "6ฆฌ", C57: "6ฆญ", C58: "6ฆฐ", C59: "6ฆณ", C60: "6ฆด", C61: "6ฆต", C62: "6ฆถ", C63: "6ฆท", C64: "6ฆธ", C65: "6ฆน", C66: "6ฆบ", C67: "6ฆผ", C68: "6ฆพ", C69: "6ฆภ", C70: "6ฆม", C71: "6ฆย", C72: "6ฆร", C73: "6ฆล", C74: "6ฆว", C75: "6ฆศ", C76: "6ฆษ", C77: "6ฆส", C78: "6ฆห", C79: "6ฆฬ", C80: "6ฆอ", C81: "6ฆฮ",
+      C82: "7ฆก", C83: "7ฆข", C84: "7ฆค", C85: "7ฆง", C86: "7ฆจ", C87: "7ฆฉ", C88: "7ฆช", C89: "7ฆฌ", C90: "7ฆญ", C91: "7ฆฐ", C92: "7ฆณ", C93: "7ฆด", C94: "7ฆต", C95: "7ฆถ", C96: "7ฆท", C97: "7ฆธ", C98: "7ฆน", C99: "7ฆบ", D10: "7ฆผ", D11: "7ฆพ", D12: "7ฆภ", D13: "7ฆม", D14: "7ฆย", D15: "7ฆร", D16: "7ฆล", D17: "7ฆว", D18: "7ฆศ", D19: "7ฆษ", D20: "7ฆส", D21: "7ฆห", D22: "7ฆฬ", D23: "7ฆอ", D24: "7ฆฮ",
+      D25: "8ฆก", D26: "8ฆข", D27: "8ฆค", D28: "8ฆง", D29: "8ฆจ", D30: "8ฆฉ", D31: "8ฆช", D32: "8ฆฌ", D33: "8ฆญ", D34: "8ฆฐ", D35: "8ฆณ", D36: "8ฆด", D37: "8ฆต", D38: "8ฆถ", D39: "8ฆท", D40: "8ฆธ", D41: "8ฆน", D42: "8ฆบ", D43: "8ฆผ", D44: "8ฆพ", D45: "8ฆภ", D46: "8ฆม", D47: "8ฆย", D48: "8ฆร", D49: "8ฆล", D50: "8ฆว", D51: "8ฆศ", D52: "8ฆษ", D53: "8ฆส", D54: "8ฆห", D55: "8ฆฬ", D56: "8ฆอ", D57: "8ฆฮ",
+      D58: "9ฆก", D59: "9ฆข", D60: "9ฆค", D61: "9ฆง", D62: "9ฆจ", D63: "9ฆฉ", D64: "9ฆช", D65: "9ฆฌ", D66: "9ฆญ", D67: "9ฆฐ", D68: "9ฆณ", D69: "9ฆด", D70: "9ฆต", D71: "9ฆถ", D72: "9ฆท", D73: "9ฆธ", D74: "9ฆน", D75: "9ฆบ", D76: "9ฆผ", D77: "9ฆพ", D78: "9ฆภ", D79: "9ฆม", D80: "9ฆย", D81: "9ฆร", D82: "9ฆล", D83: "9ฆว", D84: "9ฆศ", D85: "9ฆษ", D86: "9ฆส", D87: "9ฆห", D88: "9ฆฬ", D89: "9ฆอ", D90: "9ฆฮ",
+      J80: "1ฒก", J81: "1ฒข", J82: "1ฒค", J83: "1ฒฆ", J84: "1ฒง", J85: "1ฒจ", J86: "1ฒฉ", J87: "1ฒช", J88: "1ฒฌ", J89: "1ฒญ", J90: "1ฒฐ", J91: "1ฒณ", J92: "1ฒต", J93: "1ฒถ", J94: "1ฒท", J95: "1ฒธ", J96: "1ฒน", J97: "1ฒบ", J98: "1ฒผ", J99: "1ฒพ", K10: "1ฒภ", K11: "1ฒม", K12: "1ฒย", K13: "1ฒร", K14: "1ฒล", K15: "1ฒว", K16: "1ฒศ", K17: "1ฒษ", K18: "1ฒส", K19: "1ฒห", K20: "1ฒฬ", K21: "1ฒอ", K22: "1ฒฮ",
+      K23: "2ฒก", K24: "2ฒข", K25: "2ฒค", K26: "2ฒฆ", K27: "2ฒง", K28: "2ฒจ", K29: "2ฒฉ", K30: "2ฒช", K31: "2ฒฌ", K32: "2ฒญ", K33: "2ฒฐ", K34: "2ฒณ", K35: "2ฒต", K36: "2ฒถ", K37: "2ฒท", K38: "2ฒธ", K39: "2ฒน", K40: "2ฒบ", K41: "2ฒผ", K42: "2ฒพ", K43: "2ฒภ", K44: "2ฒม", K45: "2ฒย", K46: "2ฒร", K47: "2ฒล", K48: "2ฒว", K49: "2ฒศ", K50: "2ฒษ", K51: "2ฒส", K52: "2ฒห", K53: "2ฒฬ", K54: "2ฒอ", K55: "2ฒฮ",
+      K56: "3ฒก", K57: "3ฒข", K58: "3ฒค", K59: "3ฒฆ", K60: "3ฒง", K61: "3ฒจ", K62: "3ฒฉ", K63: "3ฒช", K64: "3ฒฌ", K65: "3ฒญ", K66: "3ฒฐ", K67: "3ฒณ", K68: "3ฒต", K69: "3ฒถ", K70: "3ฒท", K71: "3ฒธ", K72: "3ฒน", K73: "3ฒบ", K74: "3ฒผ", K75: "3ฒพ", K76: "3ฒภ", K77: "3ฒม", K78: "3ฒย", K79: "3ฒร", K80: "3ฒล", K81: "3ฒว", K82: "3ฒศ", K83: "3ฒษ", K84: "3ฒส", K85: "3ฒห", K86: "3ฒฬ", K87: "3ฒอ", K88: "3ฒฮ",
+      K89: "4ฒก", K90: "4ฒข", K91: "4ฒค", K92: "4ฒฆ", K93: "4ฒง", K94: "4ฒจ", K95: "4ฒฉ", K96: "4ฒช", K97: "4ฒฌ", K98: "4ฒญ", K99: "4ฒฐ", L10: "4ฒณ", L11: "4ฒต", L12: "4ฒถ", L13: "4ฒท", L14: "4ฒธ", L15: "4ฒน", L16: "4ฒบ", L17: "4ฒผ", L18: "4ฒพ", L19: "4ฒภ", L20: "4ฒม", L21: "4ฒย", L22: "4ฒร", L23: "4ฒล", L24: "4ฒว", L25: "4ฒศ", L26: "4ฒษ", L27: "4ฒส", L28: "4ฒห", L29: "4ฒฬ", L30: "4ฒอ", L31: "4ฒฮ",
+      L32: "5ฒก", L33: "5ฒข", L34: "5ฒค", L35: "5ฒฆ", L36: "5ฒง", L37: "5ฒจ", L38: "5ฒฉ", L39: "5ฒช", L40: "5ฒฌ", L41: "5ฒญ", L42: "5ฒฐ", L43: "5ฒณ", L44: "5ฒต", L45: "5ฒถ", L46: "5ฒท", L47: "5ฒธ", L48: "5ฒน", L49: "5ฒบ", L50: "5ฒผ", L51: "5ฒพ", L52: "5ฒภ", L53: "5ฒม", L54: "5ฒย", L55: "5ฒร", L56: "5ฒล", L57: "5ฒว", L58: "5ฒศ", L59: "5ฒษ", L60: "5ฒส", L61: "5ฒห", L62: "5ฒฬ", L63: "5ฒอ", L64: "5ฒฮ",
+      L65: "6ฒก", L66: "6ฒข", L67: "6ฒค", L68: "6ฒฆ", L69: "6ฒง", L70: "6ฒจ", L71: "6ฒฉ", L72: "6ฒช", L73: "6ฒฌ", L74: "6ฒญ", L75: "6ฒฐ", L76: "6ฒณ", L77: "6ฒต", L78: "6ฒถ", L79: "6ฒท", L80: "6ฒธ", L81: "6ฒน", L82: "6ฒบ", L83: "6ฒผ", L84: "6ฒพ", L85: "6ฒภ", L86: "6ฒม", L87: "6ฒย", L88: "6ฒร", L89: "6ฒล", L90: "6ฒว", L91: "6ฒศ", L92: "6ฒษ", L93: "6ฒส", L94: "6ฒห", L95: "6ฒฬ", L96: "6ฒอ", L97: "6ฒฮ",
+      L98: "7ฒก", L99: "7ฒข", M10: "7ฒค", M11: "7ฒฆ", M12: "7ฒง", M13: "7ฒจ", M14: "7ฒฉ", M15: "7ฒช", M16: "7ฒฌ", M17: "7ฒญ", M18: "7ฒฐ", M19: "7ฒณ", M20: "7ฒต", M21: "7ฒถ", M22: "7ฒท", M23: "7ฒธ", M24: "7ฒน", M25: "7ฒบ", M26: "7ฒผ", M27: "7ฒพ", M28: "7ฒภ", M29: "7ฒม", M30: "7ฒย", M31: "7ฒร", M32: "7ฒล", M33: "7ฒว", M34: "7ฒศ", M35: "7ฒษ", M36: "7ฒส", M37: "7ฒห", M38: "7ฒฬ", M39: "7ฒอ", M40: "7ฒฮ",
+      M41: "8ฒก", M42: "8ฒข", M43: "8ฒค", M44: "8ฒฆ", M45: "8ฒง", M46: "8ฒจ", M47: "8ฒฉ", M48: "8ฒช", M49: "8ฒฌ", M50: "8ฒญ", M51: "8ฒฐ", M52: "8ฒณ", M53: "8ฒต", M54: "8ฒถ", M55: "8ฒท", M56: "8ฒธ", M57: "8ฒน", M58: "8ฒบ", M59: "8ฒผ", M60: "8ฒพ", M61: "8ฒภ", M62: "8ฒม", M63: "8ฒย", M64: "8ฒร", M65: "8ฒล", M66: "8ฒว", M67: "8ฒศ", M68: "8ฒษ", M69: "8ฒส", M70: "8ฒห", M71: "8ฒฬ", M72: "8ฒอ", M73: "8ฒฮ",
+      M74: "9ฒก", M75: "9ฒข", M76: "9ฒค", M77: "9ฒฆ", M78: "9ฒง", M79: "9ฒจ", M80: "9ฒฉ", M81: "9ฒช", M82: "9ฒฌ", M83: "9ฒญ", M84: "9ฒฐ", M85: "9ฒณ", M86: "9ฒต", M87: "9ฒถ", M88: "9ฒท", M89: "9ฒธ", M90: "9ฒน", M91: "9ฒบ", M92: "9ฒผ", M93: "9ฒพ", M94: "9ฒภ", M95: "9ฒม", M96: "9ฒย", M97: "9ฒร", M98: "9ฒล", M99: "9ฒว", N10: "9ฒศ", N11: "9ฒษ", N12: "9ฒส", N13: "9ฒห", N14: "9ฒฬ", N15: "9ฒอ", N16: "9ฒฮ"
+    };
+
+    let currentMode = 'number'; 
+    let lastRecord = null;
+
+    // --- Core UI Logic ---
+    function switchView(viewName) {
+      // Hide all
+      document.querySelectorAll('.view-section').forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('block');
+      });
+      
+      // Show Target
+      const target = document.getElementById('view-' + viewName);
+      target.classList.remove('hidden');
+      target.classList.add('block');
+      
+      // Animate
+      if(viewName !== 'home') {
+        target.classList.remove('animate-slide-up');
+        void target.offsetWidth; // trigger reflow
+        target.classList.add('animate-slide-up');
+      }
+
+      // Update Desktop Nav
+      document.querySelectorAll('.nav-btn').forEach((el, index) => {
+        const isActive = (viewName === 'home' && index === 0) || 
+                         (viewName === 'foreign' && index === 1) || 
+                         (viewName === 'full' && index === 2);
+        
+        // Reset all classes
+        el.className = 'nav-btn flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white hover:bg-white/5';
+
+        if (isActive) {
+          if(viewName === 'home') {
+             el.classList.add('text-white', 'bg-white/10');
+          } else if(viewName === 'foreign') {
+             el.classList.add('text-amber-400', 'bg-amber-500/10', 'border', 'border-amber-500/30', 'shadow-lg', 'shadow-amber-500/10');
+             el.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
+          } else if(viewName === 'full') {
+             el.classList.add('text-sky-400', 'bg-sky-500/10', 'border', 'border-sky-500/30', 'shadow-lg', 'shadow-sky-500/10');
+             el.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
+          }
+        }
+      });
+
+      // Update Mobile Nav
+      document.querySelectorAll('.nav-mobile-btn').forEach((el, index) => {
+        const isActive = (viewName === 'home' && index === 0) || 
+                         (viewName === 'foreign' && index === 1) || 
+                         (viewName === 'full' && index === 2);
+        if (isActive) {
+          el.classList.add('text-sky-400');
+          el.classList.remove('text-slate-500');
+        } else {
+          el.classList.remove('text-sky-400');
+          el.classList.add('text-slate-500');
+        }
+      });
+
+      // Auto Focus
+      if(viewName === 'full') setTimeout(() => document.getElementById('searchInput').focus(), 150);
+      window.scrollTo(0,0);
+    }
+
+    // --- Clear Input Logic ---
+    function clearInput(id) {
+        const el = document.getElementById(id);
+        if(el) {
+            el.value = '';
+            el.focus();
+            // Trigger events if necessary
+            if(id === 'searchInput') updateFullSearch();
+            if(id === 'fullInput') document.getElementById('fullResult').innerText = '-';
+            if(id === 'plateInput') document.getElementById('plateResult').innerText = '-';
+        }
+    }
+
+    // --- Toast Logic ---
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msgEl = document.getElementById('toastMsg');
+      
+      msgEl.innerText = message || 'คัดลอกเรียบร้อย';
+      toast.classList.remove('opacity-0', 'translate-y-10');
+      
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-10');
+      }, 2500);
+    }
+
+    function copyText(text, label) {
+      if(!text || text === '-' || text === 'ไม่พบข้อมูล') return;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(label ? `คัดลอก ${label} แล้ว` : 'คัดลอกเรียบร้อย');
+      }).catch(() => {});
+    }
+
+    // --- Feature: Foreign Plate ---
+    function convertPlate(input, skipFirst) {
+      if (!input) return "";
+      const raw = input.toUpperCase().trim().replace(/\s+/g, "");
+      let out = "";
+      let i = 0;
+      if (skipFirst && /^[0-9]$/.test(raw[0])) { out += raw[0]; i = 1; }
+      for (; i < raw.length; ) {
+        const three = raw.slice(i, i + 3);
+        const two = raw.slice(i, i + 2);
+        if (three.length === 3 && CODE_TO_TH[three]) { out += CODE_TO_TH[three]; i += 3; }
+        else if (two.length === 2 && CODE_TO_TH[two]) { out += CODE_TO_TH[two]; i += 2; }
+        else { out += CODE_TO_TH[raw[i]] || raw[i]; i++; }
+      }
+      return out;
+    }
+
+    document.getElementById('fullInput').addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase();
+      document.getElementById('fullResult').innerText = convertPlate(e.target.value, false) || '-';
+    });
+    document.getElementById('plateInput').addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase();
+      document.getElementById('plateResult').innerText = convertPlate(e.target.value, true) || '-';
+    });
+
+    // --- Feature: Full Search ---
+    function setFullMode(mode) {
+      currentMode = mode;
+      
+      // Update Buttons UI
+      const btnNum = document.getElementById('btnModeNum');
+      const btnProv = document.getElementById('btnModeProv');
+      const numType = document.getElementById('numTypeToggle');
+      const resCards = document.getElementById('resultCards');
+      const input = document.getElementById('searchInput');
+
+      if(mode === 'number') {
+        btnNum.classList.add('bg-sky-500/10', 'border-sky-500/30');
+        btnNum.classList.remove('border-transparent');
+        btnProv.classList.remove('bg-indigo-500/10', 'border-indigo-500/30');
+        btnProv.classList.add('border-transparent');
+        
+        input.placeholder = "กรอกเลข 2 หลัก (เช่น 10, 52)";
+        numType.classList.remove('hidden');
+        resCards.classList.add('hidden');
+      } else {
+        btnProv.classList.add('bg-indigo-500/10', 'border-indigo-500/30');
+        btnProv.classList.remove('border-transparent');
+        btnNum.classList.remove('bg-sky-500/10', 'border-sky-500/30');
+        btnNum.classList.add('border-transparent');
+
+        input.placeholder = "พิมพ์ชื่อจังหวัด (เช่น นคร...)";
+        numType.classList.add('hidden');
+        resCards.classList.remove('hidden');
+      }
+      
+      input.value = "";
+      updateFullSearch();
+      input.focus();
+    }
+
+    function formatNum(n) { return String(n).padStart(2, '0'); }
+
+    function updateFullSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      const mainVal = document.getElementById('mainDisplayValue');
+      const mainSub = document.getElementById('mainDisplaySub');
+      const rPlate = document.getElementById('resPlate');
+      const rSys = document.getElementById('resSystem');
+      
+      lastRecord = null;
+      
+      if(!query) {
+        mainVal.innerText = "-"; 
+        mainSub.innerText = "รอการค้นหา...";
+        mainSub.className = "inline-block px-4 py-2 rounded-full bg-slate-900/50 border border-slate-700 text-slate-300 text-lg md:text-xl font-mono cursor-pointer transition-all";
+        rPlate.innerText = "-"; 
+        rSys.innerText = "-"; 
+        return;
+      }
+
+      let found = null;
+
+      if(currentMode === 'number') {
+        const numType = document.getElementById('numberTypeSelect').value;
+        const num = parseInt(query);
+        if(!isNaN(num)) {
+          if(numType === 'plate') found = provinceData.find(p => p.plate === num);
+          else found = provinceData.find(p => p.system === num);
+        }
+
+        if(found) {
+          mainVal.innerText = found.province;
+          mainVal.classList.remove('text-slate-500');
+          mainVal.classList.add('text-white');
+          
+          if(numType === 'plate') {
+            mainSub.innerHTML = `<span class="text-sky-400">เลขในระบบ:</span> ${found.system}`;
+          } else {
+            mainSub.innerHTML = `<span class="text-amber-400">เลขป้ายเหลือง:</span> ${formatNum(found.plate)}`;
+          }
+          mainSub.className = "inline-block px-4 py-2 rounded-full bg-slate-900 border border-sky-500/30 text-white text-lg md:text-xl font-mono cursor-pointer hover:bg-sky-500/20 transition-all shadow-lg shadow-sky-500/10";
+          lastRecord = found;
+        } else {
+          mainVal.innerText = "ไม่พบข้อมูล";
+          mainVal.classList.add('text-slate-500');
+          mainSub.innerText = "กรุณาตรวจสอบตัวเลข";
+          mainSub.className = "inline-block px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-base";
+        }
+      } else {
+        found = provinceData.find(p => p.province === query);
+        if(found) {
+          mainVal.innerText = found.province;
+          mainVal.classList.remove('text-slate-500');
+          mainSub.innerText = "✓ ข้อมูลถูกต้อง";
+          mainSub.className = "inline-block px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-base";
+          rPlate.innerText = formatNum(found.plate);
+          rSys.innerText = found.system;
+          lastRecord = found;
+        } else {
+          mainVal.innerText = "-";
+          mainSub.innerText = "กำลังค้นหา...";
+          mainSub.className = "inline-block px-4 py-2 rounded-full bg-slate-900/50 border border-slate-700 text-slate-300 text-base animate-pulse";
+          rPlate.innerText = "-";
+          rSys.innerText = "-";
+        }
+      }
+    }
+
+    // --- Autocomplete Logic ---
+    const searchInput = document.getElementById('searchInput');
+    const autoList = document.getElementById('autocompleteList');
+
+    searchInput.addEventListener('input', function(e) {
+      const val = this.value;
+      if(currentMode === 'number') {
+        this.value = val.replace(/[^0-9]/g, '');
+        updateFullSearch();
+        autoList.classList.add('hidden');
+        return;
+      }
+      if(currentMode === 'province') {
+        if(!val) { 
+          autoList.classList.add('hidden'); 
+          updateFullSearch(); 
+          return; 
+        }
+        const matches = provinceData.filter(p => p.province.includes(val));
+        if(matches.length > 0) {
+          autoList.innerHTML = '';
+          matches.forEach(m => {
+            const li = document.createElement('li');
+            li.className = 'px-4 py-3 hover:bg-sky-500/20 cursor-pointer text-slate-300 hover:text-white transition-colors flex justify-between items-center';
+            // Highlight Match
+            const regex = new RegExp(`(${val})`, 'gi');
+            const hlText = m.province.replace(regex, '<span class="text-sky-400 font-bold">$1</span>');
+            
+            li.innerHTML = `<span>${hlText}</span> <i class="fa-solid fa-chevron-right text-xs text-slate-600"></i>`;
+            li.addEventListener('click', () => {
+              searchInput.value = m.province;
+              autoList.classList.add('hidden');
+              updateFullSearch();
+            });
+            autoList.appendChild(li);
+          });
+          autoList.classList.remove('hidden');
+        } else {
+          autoList.classList.add('hidden');
+        }
+        updateFullSearch();
+      }
+    });
+
+    // Close autocomplete when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !autoList.contains(e.target)) {
+        autoList.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('numberTypeSelect').addEventListener('change', updateFullSearch);
+
+    function copyCard(type) {
+      if(!lastRecord) return;
+      if(type === 'yellow') copyText(formatNum(lastRecord.plate), 'เลขป้ายเหลือง');
+      if(type === 'blue') copyText(lastRecord.system, 'เลขในระบบ');
+    }
+
+    // --- Global Keydown for Delete ---
+    document.addEventListener("keydown", (e) => {
+      // Only trigger if Delete key is pressed
+      if (e.key === "Delete") {
+        const viewForeign = document.getElementById('view-foreign');
+        const viewFull = document.getElementById('view-full');
+        
+        // Logic for Foreign Plate View
+        if (!viewForeign.classList.contains('hidden')) {
+           clearInput('fullInput');
+           clearInput('plateInput');
+           document.getElementById('fullInput').focus(); 
+        }
+        
+        // Logic for Full Search View
+        if (!viewFull.classList.contains('hidden')) {
+           clearInput('searchInput');
+        }
+      }
+    });
+
+    // Init
+    setFullMode('number');
+    switchView('home'); // Ensure home is active initially
+  </script>
+</body>
+</html>
